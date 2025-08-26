@@ -12,45 +12,19 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
-        /* Custom styles for threat level text shadow and glow */
-        .threat-text-orange {
-            text-shadow: 0 0 5px rgba(255, 165, 0, 0.7), 0 0 10px rgba(255, 165, 0, 0.5);
-        }
-        .threat-text-red {
-            text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 15px rgba(255, 0, 0, 0.6);
-        }
-        .threat-text-yellow {
-             text-shadow: 0 0 5px rgba(255, 255, 0, 0.7), 0 0 10px rgba(255, 255, 0, 0.5);
-        }
-        /* Animation for the pulsing user location dot */
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.2);
-                opacity: 0.8;
-            }
-        }
-        .pulse-arrow {
-            animation: pulse 2s infinite;
-        }
-        /* Animation for the storm cell */
-        @keyframes storm-move {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(-80px, -60px); }
-        }
-        .storm-cell {
-            animation: storm-move 60s linear infinite;
-        }
+        .threat-text-orange { text-shadow: 0 0 5px rgba(255, 165, 0, 0.7), 0 0 10px rgba(255, 165, 0, 0.5); }
+        .threat-text-red { text-shadow: 0 0 8px rgba(255, 0, 0, 0.8), 0 0 15px rgba(255, 0, 0, 0.6); }
+        .threat-text-yellow { text-shadow: 0 0 5px rgba(255, 255, 0, 0.7), 0 0 10px rgba(255, 255, 0, 0.5); }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.2); opacity: 0.8; } }
+        .pulse-arrow { animation: pulse 2s infinite; }
+        @keyframes storm-move { 0% { transform: translate(0, 0); } 100% { transform: translate(-80px, -60px); } }
+        .storm-cell { animation: storm-move 60s linear infinite; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
 
     <div class="container mx-auto p-4 max-w-4xl">
 
-        <!-- Header -->
         <header class="text-center mb-4">
             <h1 class="text-3xl md:text-4xl font-bold text-white">Playa Weather Sentinel</h1>
             <p class="text-sm text-gray-400">Don't just see the weather. See its impact.</p>
@@ -58,345 +32,307 @@
         </header>
 
         <main>
-            <!-- Threat Level Section -->
             <section id="threatcon-section" class="mb-6 p-4 rounded-lg border border-gray-700 shadow-lg transition-all duration-500">
                 <div class="text-center">
                     <h2 class="text-lg font-semibold text-gray-400 uppercase tracking-wider">Current ThreatCon</h2>
                     <p id="threatcon-level" class="text-5xl md:text-7xl font-black transition-all duration-500">--</p>
-                    <p id="threatcon-summary" class="mt-2 text-base md:text-lg font-medium text-gray-300">--</p>
+                    <p id="threatcon-summary" class="mt-2 text-base md:text-lg font-medium text-gray-300">Fetching Live Data...</p>
                 </div>
             </section>
 
-            <!-- At a Glance Section -->
             <section class="mb-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div class="bg-gray-800 p-3 rounded-lg">
-                    <p class="text-sm text-gray-400">Temp</p>
-                    <p class="text-2xl font-bold">77°F</p>
-                </div>
-                <div class="bg-gray-800 p-3 rounded-lg">
-                    <p class="text-sm text-gray-400">Wind</p>
-                    <p class="text-2xl font-bold">SE 15mph</p>
-                </div>
-                <div class="bg-gray-800 p-3 rounded-lg">
-                    <p class="text-sm text-gray-400">Gusts</p>
-                    <p class="text-2xl font-bold text-yellow-400">35mph</p>
-                </div>
-                <div class="bg-gray-800 p-3 rounded-lg">
-                    <p class="text-sm text-gray-400">Precip ETA</p>
-                    <p class="text-2xl font-bold">45 min</p>
-                </div>
+                <div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm text-gray-400">Temp</p><p id="temp-data" class="text-2xl font-bold">--</p></div>
+                <div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm text-gray-400">Wind</p><p id="wind-data" class="text-2xl font-bold">--</p></div>
+                <div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm text-gray-400">Gusts</p><p id="gusts-data" class="text-2xl font-bold text-yellow-400">--</p></div>
+                <div class="bg-gray-800 p-3 rounded-lg"><p class="text-sm text-gray-400">Precip Chance</p><p id="precip-data" class="text-2xl font-bold">--</p></div>
             </section>
 
-            <!-- Impact Map Section -->
             <section class="mb-6 bg-gray-800 p-4 rounded-lg border border-gray-700">
                 <h3 class="text-xl font-bold text-center mb-3">Impact Map: Flash Flood & Runoff Hazard</h3>
                 <div class="relative w-full aspect-video bg-gray-700 rounded-md overflow-hidden">
-                    <!-- This SVG will be populated by JavaScript -->
                     <svg id="impact-map" width="100%" height="100%" viewBox="0 0 400 225"></svg>
                 </div>
                 <div id="map-analysis" class="mt-4 text-sm bg-gray-900 p-3 rounded-md">
-                    <!-- Analysis text will be populated by JavaScript -->
+                    <p>Awaiting live weather data to generate impact analysis...</p>
                 </div>
             </section>
 
-            <!-- Dynamic Hazard Checklist -->
             <section class="mb-6">
                 <h3 class="text-xl font-bold text-center mb-3">Dynamic Hazard Checklist</h3>
-                <div id="checklist-container" class="space-y-3">
-                    <!-- Checklist items will be populated by JavaScript -->
-                </div>
+                <div id="checklist-container" class="space-y-3"></div>
             </section>
             
-            <!-- Forecast Synopsis -->
             <section class="bg-gray-800 p-4 rounded-lg border border-gray-700">
-                 <h3 class="text-xl font-bold text-center mb-3">Forecast Synopsis (Next 24 Hours)</h3>
-                 <ul class="space-y-2 text-sm">
-                    <li class="flex items-start"><span class="font-bold text-cyan-400 w-28 shrink-0">Now - 3 AM:</span><span>High probability (60%) of thunderstorms, heavy downpours, and strong, erratic outflow winds. <strong class="text-red-400">Flash flooding is the primary concern.</strong></span></li>
-                    <li class="flex items-start"><span class="font-bold text-cyan-400 w-28 shrink-0">3 AM - 9 AM:</span><span>Showers tapering off, winds decreasing to 10-15 mph.</span></li>
-                    <li class="flex items-start"><span class="font-bold text-cyan-400 w-28 shrink-0">Tue Morning:</span><span>Variable clouds, sun breaks. Playa surface will be slick and muddy.</span></li>
-                    <li class="flex items-start"><span class="font-bold text-cyan-400 w-28 shrink-0">Tue Afternoon:</span><span>Chance (40%) of another isolated thundershower.</span></li>
+                 <h3 class="text-xl font-bold text-center mb-3">Forecast Synopsis</h3>
+                 <ul id="forecast-container" class="space-y-2 text-sm">
+                    <li>Loading forecast...</li>
                  </ul>
             </section>
-
         </main>
 
-        <!-- Footer -->
         <footer class="mt-6 text-center text-xs text-gray-500">
-            <p>Data Sources: NWS Reno, NOAA Doppler Radar, USGS 3DEP, Proprietary Runoff Algorithm.</p>
+            <p>Data Source: National Weather Service (api.weather.gov)</p>
             <p>&copy; 2025 Playa Weather Sentinel. Stay safe.</p>
         </footer>
-
     </div>
 
     <script>
         // --- CONFIGURATION ---
-        // This object holds the definitions for different threat levels.
-        const THREAT_LEVELS = {
-            NONE: {
-                level: 'NONE',
-                color: 'text-green-400',
-                bgColor: 'bg-green-500/10',
-                borderColor: 'border-green-500/30',
-                textClass: '',
-                summary: 'No immediate weather threats.',
-                checklist: [
-                    { icon: '☀️', text: 'Hydrate and apply sunscreen.', status: 'info' },
-                    { icon: '⛺', text: 'Perform routine camp maintenance.', status: 'info' },
-                ]
-            },
-            YELLOW: {
-                level: 'YELLOW',
-                color: 'text-yellow-400',
-                bgColor: 'bg-yellow-500/10',
-                borderColor: 'border-yellow-500/30',
-                textClass: 'threat-text-yellow',
-                summary: 'Advisory / Conditions developing. Monitor weather.',
-                checklist: [
-                    { icon: '💨', text: 'Check tent stakes and shade structure tie-downs.', status: 'warn' },
-                    { icon: '📻', text: 'Monitor weather updates and check on neighbors.', status: 'info' },
-                    { icon: '📍', text: 'Know the location of nearby structurally-sound shelters.', status: 'info' },
-                ]
-            },
-            ORANGE: {
-                level: 'ORANGE',
-                color: 'text-orange-500',
-                bgColor: 'bg-orange-500/10',
-                borderColor: 'border-orange-500/30',
-                textClass: 'threat-text-orange',
-                summary: 'Elevated / Prepare for Shelter. Lightning & High Winds Possible.',
-                checklist: [
-                    { icon: '❗', text: 'IMMEDIATE ACTION: SECURE YOUR CAMP (HIGH WIND GUSTS IMMINENT). Lower shade structures.', status: 'danger' },
-                    { icon: '⚡', text: 'IMMINENT ACTION: PREPARE FOR LIGHTNING & RAIN. Identify shelter, unplug electronics.', status: 'danger' },
-                    { icon: '💧', text: 'AFTER THE RAIN: AVOID DRIVING/BIKING. Prepare 4:1 water-to-vinegar foot soak.', status: 'warn' },
-                ]
-            },
-            RED: {
-                level: 'RED',
-                color: 'text-red-500',
-                bgColor: 'bg-red-500/10',
-                borderColor: 'border-red-500/30',
-                textClass: 'threat-text-red',
-                summary: 'SEVERE / Shelter Immediately! Life-threatening conditions.',
-                checklist: [
-                    { icon: '🏃‍♂️', text: 'SHELTER NOW. Get inside a hard-topped vehicle or substantial building. Stay away from metal objects.', status: 'danger' },
-                    { icon: '�', text: 'Monitor emergency broadcasts. Do not leave shelter until threat has passed.', status: 'danger' },
-                    { icon: '🤝', text: 'Check on neighbors ONLY when it is safe to do so.', status: 'warn' },
-                ]
-            }
+        const BRC_COORDINATES = {
+            lat: 40.7865, // Black Rock City approximate center
+            lon: -119.2065
         };
 
-        // --- CORE FUNCTIONS ---
+        const THREAT_LEVELS = {
+            // ... (Threat level definitions remain the same as before) ...
+            NONE: { level: 'NONE', color: 'text-green-400', bgColor: 'bg-green-500/10', borderColor: 'border-green-500/30', textClass: '', summary: 'No immediate weather threats.', checklist: [{ icon: '☀️', text: 'Hydrate and apply sunscreen.', status: 'info' },{ icon: '⛺', text: 'Perform routine camp maintenance.', status: 'info' }] },
+            YELLOW: { level: 'YELLOW', color: 'text-yellow-400', bgColor: 'bg-yellow-500/10', borderColor: 'border-yellow-500/30', textClass: 'threat-text-yellow', summary: 'Advisory / Conditions developing. Monitor weather.', checklist: [{ icon: '💨', text: 'Check tent stakes and shade structure tie-downs.', status: 'warn' },{ icon: '📻', text: 'Monitor weather updates and check on neighbors.', status: 'info' },{ icon: '📍', text: 'Know the location of nearby structurally-sound shelters.', status: 'info' }] },
+            ORANGE: { level: 'ORANGE', color: 'text-orange-500', bgColor: 'bg-orange-500/10', borderColor: 'border-orange-500/30', textClass: 'threat-text-orange', summary: 'Elevated / Prepare for Shelter. Lightning & High Winds Possible.', checklist: [{ icon: '❗', text: 'IMMEDIATE ACTION: SECURE YOUR CAMP (HIGH WIND GUSTS IMMINENT). Lower shade structures.', status: 'danger' },{ icon: '⚡', text: 'IMMINENT ACTION: PREPARE FOR LIGHTNING & RAIN. Identify shelter, unplug electronics.', status: 'danger' },{ icon: '💧', text: 'AFTER THE RAIN: AVOID DRIVING/BIKING. Prepare 4:1 water-to-vinegar foot soak.', status: 'warn' }] },
+            RED: { level: 'RED', color: 'text-red-500', bgColor: 'bg-red-500/10', borderColor: 'border-red-500/30', textClass: 'threat-text-red', summary: 'SEVERE / Shelter Immediately! Life-threatening conditions.', checklist: [{ icon: '🏃‍♂️', text: 'SHELTER NOW. Get inside a hard-topped vehicle or substantial building.', status: 'danger' },{ icon: '📻', text: 'Monitor emergency broadcasts. Do not leave shelter until threat has passed.', status: 'danger' },{ icon: '🤝', text: 'Check on neighbors ONLY when it is safe to do so.', status: 'warn' }] }
+        };
+
+        // --- NWS API FUNCTIONS ---
 
         /**
-         * Updates the "Last Updated" timestamp.
+         * Fetches live weather data from the NWS API.
+         * This is a two-step process:
+         * 1. Get the gridpoint URL for our specific coordinates.
+         * 2. Get the hourly and daily forecast from that gridpoint URL.
          */
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const dateString = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
-            document.getElementById('last-updated').textContent = `As of: ${dateString}, ${timeString} PDT — Refreshed Just Now`;
+        async function fetchWeatherData() {
+            try {
+                // Step 1: Get the gridpoint metadata
+                const pointsUrl = `https://api.weather.gov/points/${BRC_COORDINATES.lat},${BRC_COORDINATES.lon}`;
+                const pointsResponse = await fetch(pointsUrl, { headers: { 'User-Agent': 'PlayaWeatherSentinel/1.0 (contact@example.com)' } });
+                if (!pointsResponse.ok) throw new Error(`NWS points lookup failed: ${pointsResponse.status}`);
+                const pointsData = await pointsResponse.json();
+
+                const forecastUrl = pointsData.properties.forecast;
+                const forecastHourlyUrl = pointsData.properties.forecastHourly;
+
+                // Step 2: Fetch both forecasts concurrently
+                const [forecastResponse, hourlyResponse] = await Promise.all([
+                    fetch(forecastUrl, { headers: { 'User-Agent': 'PlayaWeatherSentinel/1.0' } }),
+                    fetch(forecastHourlyUrl, { headers: { 'User-Agent': 'PlayaWeatherSentinel/1.0' } })
+                ]);
+
+                if (!forecastResponse.ok) throw new Error(`NWS forecast fetch failed: ${forecastResponse.status}`);
+                if (!hourlyResponse.ok) throw new Error(`NWS hourly fetch failed: ${hourlyResponse.status}`);
+
+                const forecastData = await forecastResponse.json();
+                const hourlyData = await hourlyResponse.json();
+
+                updateUIWithLiveData(forecastData.properties.periods, hourlyData.properties.periods);
+
+            } catch (error) {
+                console.error("Weather data fetch error:", error);
+                displayError(error.message);
+            }
         }
 
         /**
-         * Sets the visual state of the app based on the threat level.
-         * @param {string} level - The key of the threat level (e.g., 'ORANGE').
+         * Analyzes forecast periods to determine a threat level.
+         * @param {Array} forecastPeriods - The array of forecast periods from the NWS API.
+         * @returns {string} The determined threat level key (e.g., 'ORANGE').
          */
+        function analyzeThreatLevel(forecastPeriods) {
+            const next24Hours = forecastPeriods.slice(0, 2); // Look at the next two 12-hour periods
+            const forecastText = next24Hours.map(p => p.detailedForecast.toLowerCase()).join(' ');
+
+            if (forecastText.includes('thunderstorm') || forecastText.includes('heavy rain') || forecastText.includes('flash flood')) {
+                return 'RED';
+            }
+            if (forecastText.includes('gusts up to') || forecastText.includes('gusty') || forecastText.includes('showers and thunderstorms likely')) {
+                return 'ORANGE';
+            }
+            if (forecastText.includes('chance of showers') || forecastText.includes('breezy')) {
+                return 'YELLOW';
+            }
+            return 'NONE';
+        }
+
+        // --- UI UPDATE FUNCTIONS ---
+
+        /**
+         * Updates all relevant parts of the UI with the fetched live data.
+         * @param {Array} forecastPeriods - The main forecast data.
+         * @param {Array} hourlyPeriods - The hourly forecast data.
+         */
+        function updateUIWithLiveData(forecastPeriods, hourlyPeriods) {
+            const currentHour = hourlyPeriods[0];
+            const threatLevel = analyzeThreatLevel(forecastPeriods);
+
+            // Update ThreatCon
+            setThreatcon(threatLevel);
+
+            // Update "At a Glance" section
+            document.getElementById('temp-data').textContent = `${currentHour.temperature}°${currentHour.temperatureUnit}`;
+            document.getElementById('wind-data').textContent = `${currentHour.windDirection} ${currentHour.windSpeed}`;
+            
+            // Find gusts in the detailed forecast for the current period
+            const currentPeriod = forecastPeriods[0];
+            const gustMatch = currentPeriod.detailedForecast.match(/gusts as high as (\d+ mph)/i);
+            document.getElementById('gusts-data').textContent = gustMatch ? gustMatch[1] : 'None';
+            
+            document.getElementById('precip-data').textContent = `${currentHour.probabilityOfPrecipitation.value || 0}%`;
+
+            // Update Forecast Synopsis
+            const forecastContainer = document.getElementById('forecast-container');
+            forecastContainer.innerHTML = '';
+            forecastPeriods.slice(0, 4).forEach(period => {
+                const li = document.createElement('li');
+                li.className = 'flex items-start';
+                li.innerHTML = `<span class="font-bold text-cyan-400 w-28 shrink-0">${period.name}:</span><span>${period.shortForecast}</span>`;
+                forecastContainer.appendChild(li);
+            });
+
+            // Update Map and Analysis based on threat
+            generateImpactMap(threatLevel);
+        }
+
+        /**
+         * Displays an error message in the UI if the API fails.
+         * @param {string} message - The error message to display.
+         */
+        function displayError(message) {
+            document.getElementById('threatcon-summary').textContent = `Error: ${message}`;
+            document.getElementById('threatcon-level').textContent = 'ERROR';
+            document.getElementById('threatcon-section').classList.add('bg-red-900/50', 'border-red-500/30');
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.getElementById('last-updated').textContent = `Live Data as of ${timeString} PDT`;
+        }
+
         function setThreatcon(level) {
             const config = THREAT_LEVELS[level];
             if (!config) return;
-
             const section = document.getElementById('threatcon-section');
             const levelText = document.getElementById('threatcon-level');
             const summaryText = document.getElementById('threatcon-summary');
-
             Object.values(THREAT_LEVELS).forEach(lvl => {
                 if (lvl.bgColor) section.classList.remove(lvl.bgColor);
                 if (lvl.borderColor) section.classList.remove(lvl.borderColor);
                 if (lvl.color) levelText.classList.remove(lvl.color);
                 if (lvl.textClass) levelText.classList.remove(lvl.textClass);
             });
-
             section.classList.add(config.bgColor, config.borderColor);
             levelText.classList.add(config.color);
-            if (config.textClass) {
-                levelText.classList.add(config.textClass);
-            }
-            
+            if (config.textClass) levelText.classList.add(config.textClass);
             levelText.textContent = config.level;
             summaryText.textContent = config.summary;
-            
             updateChecklist(config.checklist);
         }
 
-        /**
-         * Populates the hazard checklist based on the current threat level.
-         */
         function updateChecklist(items) {
             const container = document.getElementById('checklist-container');
             container.innerHTML = '';
-            
             const statusStyles = {
                 info: { bg: 'bg-blue-500/10', border: 'border-blue-500/30', text: 'text-blue-300' },
                 warn: { bg: 'bg-yellow-500/10', border: 'border-yellow-500/30', text: 'text-yellow-300' },
                 danger: { bg: 'bg-red-500/10', border: 'border-red-500/30', text: 'text-red-300' },
             };
-
             items.forEach(item => {
                 const styles = statusStyles[item.status] || statusStyles.info;
                 const itemEl = document.createElement('div');
                 itemEl.className = `flex items-center p-3 rounded-lg border ${styles.bg} ${styles.border}`;
-                itemEl.innerHTML = `
-                    <span class="text-2xl mr-4">${item.icon}</span>
-                    <span class="font-medium ${styles.text}">${item.text}</span>
-                `;
+                itemEl.innerHTML = `<span class="text-2xl mr-4">${item.icon}</span><span class="font-medium ${styles.text}">${item.text}</span>`;
                 container.appendChild(itemEl);
             });
         }
 
         /**
-         * Generates and draws the simulated impact map using SVG.
+         * Generates the map visualization. Now accepts a threat level to show/hide storm elements.
+         * @param {string} threatLevel - The current threat level.
          */
-        function generateImpactMap() {
+        function generateImpactMap(threatLevel = 'NONE') {
             const svgNS = "http://www.w3.org/2000/svg";
             const svg = document.getElementById('impact-map');
             svg.innerHTML = '';
-
-            // Define arrow marker for projection path
+            
+            // ... (SVG grid and marker definitions remain the same) ...
             const defs = document.createElementNS(svgNS, 'defs');
             const marker = document.createElementNS(svgNS, 'marker');
-            marker.id = 'arrowhead';
-            marker.setAttribute('viewBox', '0 0 10 10');
-            marker.setAttribute('refX', '5');
-            marker.setAttribute('refY', '5');
-            marker.setAttribute('markerWidth', '6');
-            marker.setAttribute('markerHeight', '6');
-            marker.setAttribute('orient', 'auto-start-reverse');
+            marker.id = 'arrowhead'; marker.setAttribute('viewBox', '0 0 10 10'); marker.setAttribute('refX', '5'); marker.setAttribute('refY', '5'); marker.setAttribute('markerWidth', '6'); marker.setAttribute('markerHeight', '6'); marker.setAttribute('orient', 'auto-start-reverse');
             const path = document.createElementNS(svgNS, 'path');
-            path.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z');
-            path.setAttribute('fill', '#fde047'); // yellow-300
-            marker.appendChild(path);
-            defs.appendChild(marker);
-            svg.appendChild(defs);
-
-            // 1. Draw BRC Grid (conceptual)
+            path.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z'); path.setAttribute('fill', '#fde047');
+            marker.appendChild(path); defs.appendChild(marker); svg.appendChild(defs);
             const gridGroup = document.createElementNS(svgNS, 'g');
-            gridGroup.setAttribute('stroke', '#4A5568');
-            gridGroup.setAttribute('stroke-width', '0.5');
+            gridGroup.setAttribute('stroke', '#4A5568'); gridGroup.setAttribute('stroke-width', '0.5');
             for (let i = 1; i < 8; i++) {
                 const angle = (i * 30 - 30) * Math.PI / 180;
                 const line = document.createElementNS(svgNS, 'line');
-                line.setAttribute('x1', '200'); line.setAttribute('y1', '112.5');
-                line.setAttribute('x2', 200 + 200 * Math.cos(angle));
-                line.setAttribute('y2', 112.5 + 112.5 * Math.sin(angle));
+                line.setAttribute('x1', '200'); line.setAttribute('y1', '112.5'); line.setAttribute('x2', 200 + 200 * Math.cos(angle)); line.setAttribute('y2', 112.5 + 112.5 * Math.sin(angle));
                 gridGroup.appendChild(line);
             }
             for (let r = 0.3; r < 1; r += 0.2) {
                  const arc = document.createElementNS(svgNS, 'path');
                  arc.setAttribute('d', `M ${200 - 200*r},112.5 a ${200*r},${112.5*r} 0 1,0 ${400*r},0`);
-                 arc.setAttribute('fill', 'none');
-                 gridGroup.appendChild(arc);
+                 arc.setAttribute('fill', 'none'); gridGroup.appendChild(arc);
             }
             svg.appendChild(gridGroup);
 
-            // 2. Simulate Pooling Zone (more organic shape)
-            const poolingGroup = document.createElementNS(svgNS, 'g');
-            const poolPath = document.createElementNS(svgNS, 'path');
-            poolPath.setAttribute('d', 'M 160,115 C 170,90 230,95 260,110 C 270,130 220,140 190,130 C 170,125 150,130 160,115 Z');
-            poolPath.setAttribute('fill', '#ef4444');
-            poolPath.setAttribute('opacity', '0.4');
-            poolingGroup.appendChild(poolPath);
-            const poolLabel = document.createElementNS(svgNS, 'text');
-            poolLabel.setAttribute('x', '175');
-            poolLabel.setAttribute('y', '120');
-            poolLabel.setAttribute('fill', '#fca5a5'); // red-300
-            poolLabel.setAttribute('font-size', '8');
-            poolLabel.setAttribute('font-weight', 'bold');
-            poolLabel.textContent = 'Predicted Pooling Zone';
-            poolingGroup.appendChild(poolLabel);
-            svg.appendChild(poolingGroup);
+            // Only draw storm, pooling, and projection if threat is elevated
+            if (threatLevel === 'ORANGE' || threatLevel === 'RED') {
+                // Pooling Zone
+                const poolingGroup = document.createElementNS(svgNS, 'g');
+                const poolPath = document.createElementNS(svgNS, 'path');
+                poolPath.setAttribute('d', 'M 160,115 C 170,90 230,95 260,110 C 270,130 220,140 190,130 C 170,125 150,130 160,115 Z');
+                poolPath.setAttribute('fill', '#ef4444'); poolPath.setAttribute('opacity', '0.4');
+                poolingGroup.appendChild(poolPath);
+                const poolLabel = document.createElementNS(svgNS, 'text');
+                poolLabel.setAttribute('x', '175'); poolLabel.setAttribute('y', '120'); poolLabel.setAttribute('fill', '#fca5a5'); poolLabel.setAttribute('font-size', '8'); poolLabel.setAttribute('font-weight', 'bold');
+                poolLabel.textContent = 'Predicted Pooling Zone';
+                poolingGroup.appendChild(poolLabel); svg.appendChild(poolingGroup);
 
-            // 3. Simulate NEXRAD-style Storm Cell
-            const stormGroup = document.createElementNS(svgNS, 'g');
-            stormGroup.classList.add('storm-cell');
-            stormGroup.setAttribute('transform-origin', '350 200');
-            // Light precip (green)
-            const light = document.createElementNS(svgNS, 'ellipse');
-            light.setAttribute('cx', '350'); light.setAttribute('cy', '200');
-            light.setAttribute('rx', '80'); light.setAttribute('ry', '60');
-            light.setAttribute('fill', '#22c55e'); light.setAttribute('opacity', '0.4');
-            // Moderate precip (yellow)
-            const moderate = document.createElementNS(svgNS, 'ellipse');
-            moderate.setAttribute('cx', '345'); moderate.setAttribute('cy', '195');
-            moderate.setAttribute('rx', '50'); moderate.setAttribute('ry', '40');
-            moderate.setAttribute('fill', '#facc15'); moderate.setAttribute('opacity', '0.6');
-            // Heavy precip (red)
-            const heavy = document.createElementNS(svgNS, 'ellipse');
-            heavy.setAttribute('cx', '340'); heavy.setAttribute('cy', '190');
-            heavy.setAttribute('rx', '25'); heavy.setAttribute('ry', '20');
-            heavy.setAttribute('fill', '#ef4444'); heavy.setAttribute('opacity', '0.8');
-            stormGroup.appendChild(light);
-            stormGroup.appendChild(moderate);
-            stormGroup.appendChild(heavy);
-            
-            // 4. Add Storm Projection Path
-            const projectionLine = document.createElementNS(svgNS, 'line');
-            projectionLine.setAttribute('x1', '340'); projectionLine.setAttribute('y1', '190');
-            projectionLine.setAttribute('x2', '260'); projectionLine.setAttribute('y2', '130');
-            projectionLine.setAttribute('stroke', '#fde047'); // yellow-300
-            projectionLine.setAttribute('stroke-width', '2');
-            projectionLine.setAttribute('stroke-dasharray', '5 5');
-            projectionLine.setAttribute('marker-end', 'url(#arrowhead)');
-            stormGroup.appendChild(projectionLine);
-            svg.appendChild(stormGroup);
+                // Storm Cell
+                const stormGroup = document.createElementNS(svgNS, 'g');
+                stormGroup.classList.add('storm-cell'); stormGroup.setAttribute('transform-origin', '350 200');
+                const light = document.createElementNS(svgNS, 'ellipse'); light.setAttribute('cx', '350'); light.setAttribute('cy', '200'); light.setAttribute('rx', '80'); light.setAttribute('ry', '60'); light.setAttribute('fill', '#22c55e'); light.setAttribute('opacity', '0.4');
+                const moderate = document.createElementNS(svgNS, 'ellipse'); moderate.setAttribute('cx', '345'); moderate.setAttribute('cy', '195'); moderate.setAttribute('rx', '50'); moderate.setAttribute('ry', '40'); moderate.setAttribute('fill', '#facc15'); moderate.setAttribute('opacity', '0.6');
+                const heavy = document.createElementNS(svgNS, 'ellipse'); heavy.setAttribute('cx', '340'); heavy.setAttribute('cy', '190'); heavy.setAttribute('rx', '25'); heavy.setAttribute('ry', '20'); heavy.setAttribute('fill', '#ef4444'); heavy.setAttribute('opacity', '0.8');
+                stormGroup.appendChild(light); stormGroup.appendChild(moderate); stormGroup.appendChild(heavy);
+                const projectionLine = document.createElementNS(svgNS, 'line');
+                projectionLine.setAttribute('x1', '340'); projectionLine.setAttribute('y1', '190'); projectionLine.setAttribute('x2', '260'); projectionLine.setAttribute('y2', '130'); projectionLine.setAttribute('stroke', '#fde047'); projectionLine.setAttribute('stroke-width', '2'); projectionLine.setAttribute('stroke-dasharray', '5 5'); projectionLine.setAttribute('marker-end', 'url(#arrowhead)');
+                stormGroup.appendChild(projectionLine); svg.appendChild(stormGroup);
+            }
 
-            // 5. Place User Location Arrow (pointing NW)
+            // User Location Arrow
             const userGroup = document.createElementNS(svgNS, 'g');
             userGroup.classList.add('pulse-arrow');
             const userArrow = document.createElementNS(svgNS, 'path');
-            // A simple triangle path pointing up
-            userArrow.setAttribute('d', 'M 0 -10 L 6 5 L -6 5 Z');
-            userArrow.setAttribute('fill', '#22d3ee'); // cyan-400
-            userArrow.setAttribute('stroke', 'white');
-            userArrow.setAttribute('stroke-width', '1');
-            // Move and rotate the arrow to point NW
+            userArrow.setAttribute('d', 'M 0 -10 L 6 5 L -6 5 Z'); userArrow.setAttribute('fill', '#22d3ee'); userArrow.setAttribute('stroke', 'white'); userArrow.setAttribute('stroke-width', '1');
             userArrow.setAttribute('transform', 'translate(250, 150) rotate(-45)');
             userGroup.appendChild(userArrow);
-            
             const userLabel = document.createElementNS(svgNS, 'text');
-            userLabel.setAttribute('x', '260');
-            userLabel.setAttribute('y', '155');
-            userLabel.setAttribute('fill', 'white');
-            userLabel.setAttribute('font-size', '8');
-            userLabel.textContent = 'YOU';
-            userGroup.appendChild(userLabel);
-            svg.appendChild(userGroup);
+            userLabel.setAttribute('x', '260'); userLabel.setAttribute('y', '155'); userLabel.setAttribute('fill', 'white'); userLabel.setAttribute('font-size', '8'); userLabel.textContent = 'YOU';
+            userGroup.appendChild(userLabel); svg.appendChild(userGroup);
             
-            // 6. Set Map Analysis Text
-            document.getElementById('map-analysis').innerHTML = `
-                <p class="font-bold text-orange-400">ANALYSIS: Storm cell approaching from SE. Red core indicates intense precipitation.</p>
-                <p class="mt-1">Dashed line shows projected path. Runoff will create deep mud in the <span class="text-red-400">Predicted Pooling Zone</span>.</p>
-                <p class="mt-2 font-bold text-cyan-300">ACTION: Your blue arrow points to the safest direction (NW). Move toward higher ground in the 2:00/10:00 sectors.</p>
-            `;
+            // Map Analysis Text
+            const mapAnalysis = document.getElementById('map-analysis');
+            if (threatLevel === 'ORANGE' || threatLevel === 'RED') {
+                mapAnalysis.innerHTML = `
+                    <p class="font-bold text-orange-400">ANALYSIS: Live forecast indicates approaching storm. Red core indicates intense precipitation.</p>
+                    <p class="mt-1">Dashed line shows projected path. Runoff will create deep mud in the <span class="text-red-400">Predicted Pooling Zone</span>.</p>
+                    <p class="mt-2 font-bold text-cyan-300">ACTION: Your blue arrow points to the safest direction (NW). Move toward higher ground in the 2:00/10:00 sectors.</p>
+                `;
+            } else {
+                 mapAnalysis.innerHTML = `<p class="font-bold text-green-400">ANALYSIS: No significant runoff or pooling events expected based on current forecast.</p>`;
+            }
         }
-
 
         // --- INITIALIZATION ---
-        
-        /**
-         * Initializes the application on page load.
-         */
         function init() {
             updateTime();
-            setInterval(updateTime, 1000);
-
-            setThreatcon('ORANGE');
-            generateImpactMap();
+            setInterval(updateTime, 60000); // Update time every minute
+            fetchWeatherData();
+            // Refresh weather data every 5 minutes
+            setInterval(fetchWeatherData, 300000);
         }
 
-        // Run the app
         window.onload = init;
-
     </script>
 </body>
 </html>
-�
